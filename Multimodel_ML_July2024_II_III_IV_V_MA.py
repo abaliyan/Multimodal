@@ -600,31 +600,29 @@ def checkPermutationsnew(models, DataArray, DataArray_New, x_lst, y_lst, customs
                     foldName = 'HeptaDataSet'
                 if len(sequence) == 8:
                     foldName = 'OctaDataSet'
-                if(foldName == 'SingleDataSet'):
-                    string_key = ''
-                    for element in sequence:
-                        string_key += str(element)
-                    string_key = string_key.replace('(', '').replace(')', '').replace(',', '_').replace(' ', '').replace('_New', '_')
-                    if string_key.endswith('_'):
-                        string_key = string_key[:-1]
-                    x_train_temp = []
-                    y_test_temp = []
-                    for index in range(0,len(sequence)):
-                        X_temp_train, y_temp_train = prepareXandYdata(x_lst, DataArray_New[sequence[index]], y_lst)
-                        x_train_temp.append(X_temp_train)
-                    X_train = customConcatinate(x_train_temp)
+                string_key = ''
+                for element in sequence:
+                    string_key += str(element)
+                string_key = string_key.replace('(', '').replace(')', '').replace(',', '_').replace(' ', '').replace('_New', '_')
+                if string_key.endswith('_'):
+                    string_key = string_key[:-1]
+                x_train_temp = []
+                y_test_temp = []
+                for index in range(0,len(sequence)):
+                    X_temp_train, y_temp_train = prepareXandYdata(x_lst, DataArray_New[sequence[index]], y_lst)
+                    x_train_temp.append(X_temp_train)
+                X_train = customConcatinate(x_train_temp)
 
-                    totalDataXtrain.extend(X_train)
-                    totalDataYtrain.extend(y_lst)
-                    savefig = False
-                    if savefig == True:
-                        PlotCustumFigureMulti(X_train[0], foldername = foldName, Data_type = string_key,
-                                        XaxisFlag = True, RangeStart = 0, RangeEnd = np.array(X_train[0]).shape[0], NormFlag = False)
-            if(foldName == 'SingleDataSet'):
-                allModel = Training_Testing_models (models, totalDataXtrain, totalDataYtrain, foldName)
-                bestModeldictName[foldName] = allModel
-                totalDataXtrain = []
-                totalDataYtrain = []
+                totalDataXtrain.extend(X_train)
+                totalDataYtrain.extend(y_lst)
+                savefig = False
+                if savefig == True:
+                    PlotCustumFigureMulti(X_train[0], foldername = foldName, Data_type = string_key,
+                                    XaxisFlag = True, RangeStart = 0, RangeEnd = np.array(X_train[0]).shape[0], NormFlag = False)
+            allModel = Training_Testing_models (models, totalDataXtrain, totalDataYtrain, foldName)
+            bestModeldictName[foldName] = allModel
+            totalDataXtrain = []
+            totalDataYtrain = []
         return bestModeldictName
     
 
