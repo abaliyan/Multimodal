@@ -3,10 +3,12 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 import numpy as np
 
-# Load the Excel file
-folder = 'D:/Multimodal/DATA_MM/results_aug2024_I_II_III_IV_V/Analysis/'
-file_path = f'{folder}Aug_Prediced_data.xlsx'
-df = pd.read_excel(file_path, engine='openpyxl')
+
+customsequence = ('EXAFS_K2', 'XRD_2_P', 'XANES', 'PDF', 'HAXPES_VB', 'SAXS', 'HAXPES_Pt3d', 'HAXPES_Pt4f')
+DIR_Data = "models_test"
+filename = f"{DIR_Data}/Aug_Predicted_Octa_MA.xlsx"
+
+df = pd.read_excel(filename, engine='openpyxl')
 
 # Keep only rows with valid predicted values
 df = df[df['Predicted'] > 0]
@@ -65,7 +67,7 @@ plt.ylabel('Frequency')
 plt.title('Distribution of Predicted SA')
 plt.xlim(0, 50)
 plt.legend()
-plt.savefig(f"{folder}/distribution_Predicted_SA.png")
+plt.savefig(f"{DIR_Data}/distribution_Predicted_MASAECSA_SA.png")
 plt.show()
 
 # -------- MA Distribution --------
@@ -77,7 +79,7 @@ plt.xlabel('MA')
 plt.ylabel('Frequency')
 plt.title('Distribution of Predicted MA')
 plt.legend()
-plt.savefig(f"{folder}/distribution_Predicted_MA.png")
+plt.savefig(f"{DIR_Data}/distribution_Predicted_MASAECSA_MA.png")
 plt.show()
 
 # -------- ECSA Distribution --------
@@ -89,7 +91,7 @@ plt.xlabel('ECSA')
 plt.ylabel('Frequency')
 plt.title('Distribution of Predicted ECSA')
 plt.legend()
-plt.savefig(f"{folder}/distribution_Predicted_ECSA.png")
+plt.savefig(f"{DIR_Data}/distribution_Predicted_MASAECSA_ECSA.png")
 plt.show()
 
 # -------- Compute element-wise mean of augmented data --------
@@ -104,8 +106,8 @@ bad_samples_mean = calculate_elementwise_mean(bad_samples_dict)
 # Save individual means
 df_good = pd.DataFrame({'Good Samples Mean': good_samples_mean})
 df_bad = pd.DataFrame({'Bad Samples Mean': bad_samples_mean})
-df_good.to_excel(f'{folder}/good_samples_mean_II_ECSA_MA_SA.xlsx', index=False)
-df_bad.to_excel(f'{folder}/bad_samples_mean_II_ECSA_MA_SA.xlsx', index=False)
+df_good.to_excel(f'{DIR_Data}/good_samples_mean_II_ECSA_MA_SA.xlsx', index=False)
+df_bad.to_excel(f'{DIR_Data}/bad_samples_mean_II_ECSA_MA_SA.xlsx', index=False)
 
 # -------- Plot Mean Augmented Data --------
 plt.figure(figsize=(25, 6))
@@ -113,7 +115,7 @@ plt.plot(good_samples_mean, label='Good')
 plt.plot(bad_samples_mean, label='Bad')
 plt.title('Mean Augmented Data')
 plt.legend()
-plt.savefig(f"{folder}/Mean_Sample.png")
+plt.savefig(f"{DIR_Data}/Mean_Sample_MASAECSA.png")
 plt.show()
 
 # Save combined Excel
@@ -121,4 +123,4 @@ output_df = pd.DataFrame({
     'Good Data': good_samples_mean,
     'Bad Data': bad_samples_mean
 })
-output_df.to_excel(f'{folder}/good_bad_samples_mean_data.xlsx', index=False)
+output_df.to_excel(f'{DIR_Data}/good_bad_samples_mean_data_MASAECSA.xlsx', index=False)

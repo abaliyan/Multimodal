@@ -36,7 +36,7 @@ import pickle
 
 from sklearn.model_selection import KFold, ShuffleSplit, cross_val_score, train_test_split
 
-DIR_Data = "D:/MM_final/models_test"
+DIR_Data = "models_test"
 
 # Function to find the mising files
 def find_missing_files(list1, list2):
@@ -847,7 +847,7 @@ def gp_posterior_cov(K, sigma):
 # Program starts from here..!
 random.seed(42)
 # Set up the file paths and list down the folder and dataset
-folder_path = 'D:/Multimodal/MM_dataset_II_III_IV_V_Aug2024/MM_dataset_II_III_IV_V_Aug2024/'
+folder_path = 'MM_dataset_II_III_IV_V_Aug2024/'
 filetype = '.xlsx'
 CharArray = ['XANES', 'EXAFS_K2','XRD_2_P','PDF','SAXS','HAXPES_VB','HAXPES_Pt4f', 'HAXPES_Pt3d']
 DataArray = {'XANES':0, 'EXAFS_K2':1,'XRD_2_P':2,'PDF':3,'SAXS':4,'HAXPES_VB':5,'HAXPES_Pt4f':6, 'HAXPES_Pt3d':7}
@@ -867,7 +867,7 @@ Data_dict = dict.fromkeys(FileLitral)
 
 # list of ML model that would like to test
 # models = [LinearRegression(),  DecisionTreeRegressor(), RandomForestRegressor(), MLPRegressor(max_iter=5000), XGBRegressor()]
-models = [LinearRegression(),]#, RandomForestRegressor()
+models = [LinearRegression(),  DecisionTreeRegressor(), RandomForestRegressor(), MLPRegressor(max_iter=5000), XGBRegressor()]
 MLmodellist = listofMLmodels(models)
 
 # Creating paths for all kind of files

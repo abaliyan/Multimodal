@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 customsequence = ('EXAFS_K2', 'XRD_2_P', 'XANES', 'PDF', 'HAXPES_VB', 'SAXS', 'HAXPES_Pt3d', 'HAXPES_Pt4f')
-DIR_Data = "D:/MM_final/models_test"
+DIR_Data = "models_test"
 filename = f"{DIR_Data}/Aug_Predicted_Octa_MA.xlsx"
 
 df = pd.read_excel(filename, engine='openpyxl')
