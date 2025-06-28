@@ -1147,10 +1147,12 @@ with open(model_filename, 'rb') as file:
 slices = {
     "XAFS": (0, 300),
     "XRD": (300, 600),
-    "Remaining1": (600, 900),
+    "XANES": (600, 900),
     "PDF": (900, 1200),
-    "VB": (1200, 1500),
-    "Remaining2": (1500, None)  # None means till end
+    "HAXPES_VB": (1200, 1500),
+    "SAXS": (1500, 1800),
+    "HAXPES_Pt3d": (1800, 2100),
+    "HAXPES_Pt4f": (2100, 2400),    # None means till end
 }
 
 desiredspectrum = 10000 // X_train.shape[0]
