@@ -60,6 +60,9 @@ pip install -r requirements_MM.txt
 
 - Run the scripts according to the need.
 
+**Pre-Trained models are saved in ["MM_models"]**:
+
+
 ## Project Status
 - Completed
 
