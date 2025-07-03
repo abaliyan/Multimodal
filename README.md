@@ -49,13 +49,18 @@
 git clone https://github.com/abaliyan/Multimodal.git
 cd Multimodal
 
-**Create a Virtual Environment**:
+Create a Virtual Environment:
 
-```bash
 python -m venv multimodal_env
 source multimodal_env/bin/activate  # On Windows: multimodal_env\Scripts\activate
 
-**Install Dependencies**:
+#Install Dependencies:
 
-```bash
 pip install -r requirements.txt
+```
+**Replace the Data in ["MM_dataset_II_III_IV_V_Aug2024"]**:
+Run the scripts according to the need.
+
+## Project Status
+- Completed
+
