@@ -54,7 +54,7 @@ source multimodal_env/bin/activate  # On Windows: multimodal_env\Scripts\activat
 
 #Install Dependencies:
 
-pip install -r requirements.txt
+pip install -r requirements_MM.txt
 ```
 **Replace the Data in ["MM_dataset_II_III_IV_V_Aug2024"]**:
 
