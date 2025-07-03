@@ -59,7 +59,8 @@ source multimodal_env/bin/activate  # On Windows: multimodal_env\Scripts\activat
 pip install -r requirements.txt
 ```
 **Replace the Data in ["MM_dataset_II_III_IV_V_Aug2024"]**:
-Run the scripts according to the need.
+
+- Run the scripts according to the need.
 
 ## Project Status
 - Completed
