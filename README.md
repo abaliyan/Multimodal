@@ -2,11 +2,9 @@
 
 ---
 
-**Project Name**: Multimodal Catalyst  
-**Performance Prediction**  
+**Project Name**: Multimodal
 **Version**: 1.0.0  
-**Author**: A. Baliyan  
-**License**: MIT
+**Author**: Ankur Baliyan
 
 ---
 
