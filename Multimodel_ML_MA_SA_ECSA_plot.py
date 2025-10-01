@@ -1,47 +1,57 @@
+"""Visualization and Analysis Script for Multi-target Electrochemical Predictions.
+
+This script analyzes and plots predicted electrochemical properties (MA, SA, ECSA)
+from multi-modal spectroscopic data, categorizing samples into good/bad based on
+performance thresholds and generating statistical visualizations.
+"""
+
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 import numpy as np
 
-
+# Spectroscopic measurement sequence
 customsequence = ('EXAFS_K2', 'XRD_2_P', 'XANES', 'PDF', 'HAXPES_VB', 'SAXS', 'HAXPES_Pt3d', 'HAXPES_Pt4f')
-DIR_Data = "models_test"
-filename = f"{DIR_Data}/Aug_Predicted_Octa_MA.xlsx"
+DIR_Data = ""
+filename = r""  # Path to Excel file containing prediction results [converted from .txt]
 
+# Load prediction results
 df = pd.read_excel(filename, engine='openpyxl')
 
-# Keep only rows with valid predicted values
+# Filter for valid predictions only
 df = df[df['Predicted'] > 0]
 
-# Extract your three targets
-predicted_MA = df['Predicted']
-predicted_SA = df['score']
-predicted_ECSA = df['Augmented']
+# Extract three electrochemical targets
+predicted_MA = df['Predicted']      # Mass Activity
+predicted_SA = df['score']          # Specific Activity
+predicted_ECSA = df['Augmented']    # Electrochemical Surface Area
 
-# Define the augmented data columns (everything after 'Augmented')
+# Extract spectroscopic feature data columns
 augmented_col_index = df.columns.get_loc('Augmented')
 augmented_data_columns = df.columns[augmented_col_index + 1:].tolist()
 
-# Create a new column with all augmented data as a list
+# Combine all spectroscopic features into a single list per sample
 df['AugmentedData'] = df[augmented_data_columns].apply(lambda row: row.dropna().tolist(), axis=1)
 
-# Categorize samples by MA
-low = 50
-high = 1700
-df['Category'] = pd.cut(
-    df['Predicted'],
-    bins=[-float('inf'), low, high, float('inf')],
-    labels=['Bad Sample', 'Neutral Sample', 'Good Sample'],
-    right=False
-)
+# Define MA performance thresholds for sample categorization
+low = 10    # Lower threshold for MA
+high = 1750 # Upper threshold for MA
 
-# Split into good and bad samples
+# Categorize samples based on MA performance
+df['Category'] = pd.cut(df['Predicted'],
+                        bins=[-float('inf'), low, high, 2300],
+                        labels=['Bad Sample', 'Neutral Sample', 'Good Sample'],
+                        right=False)
+
+# Separate high and low performing samples
 good_samples_df = df[df['Category'] == 'Good Sample']
 bad_samples_df = df[df['Category'] == 'Bad Sample']
 
+# Create dictionaries mapping MA values to spectroscopic features
 good_samples_dict = good_samples_df.set_index('Predicted')['AugmentedData'].to_dict()
 bad_samples_dict = bad_samples_df.set_index('Predicted')['AugmentedData'].to_dict()
 
+# Calculate mean electrochemical properties for each category
 mean_good_MA = np.mean(list(good_samples_dict.keys()))
 mean_bad_MA = np.mean(list(bad_samples_dict.keys()))
 mean_good_SA = good_samples_df['score'].mean()
@@ -57,7 +67,7 @@ print(f"Mean SA Bad: {mean_bad_SA:.2f}")
 print(f"Mean ECSA Good: {mean_good_ECSA:.2f}")
 print(f"Mean ECSA Bad: {mean_bad_ECSA:.2f}")
 
-# -------- SA Distribution --------
+# Generate distribution plots for each electrochemical property
 plt.figure(figsize=(10, 6))
 sns.histplot(predicted_SA, kde=True, label='SA', binwidth=3)
 plt.axvline(mean_good_SA, color='r', linestyle='--', label=f'Mean Good SA: {mean_good_SA:.2f}')
@@ -70,7 +80,6 @@ plt.legend()
 plt.savefig(f"{DIR_Data}/distribution_Predicted_MASAECSA_SA.png")
 plt.show()
 
-# -------- MA Distribution --------
 plt.figure(figsize=(10, 6))
 sns.histplot(predicted_MA, kde=True, label='MA')
 plt.axvline(mean_good_MA, color='r', linestyle='--', label=f'Mean Good MA: {mean_good_MA:.2f}')
@@ -82,7 +91,6 @@ plt.legend()
 plt.savefig(f"{DIR_Data}/distribution_Predicted_MASAECSA_MA.png")
 plt.show()
 
-# -------- ECSA Distribution --------
 plt.figure(figsize=(10, 6))
 sns.histplot(predicted_ECSA, kde=True, label='ECSA')
 plt.axvline(mean_good_ECSA, color='r', linestyle='--', label=f'Mean Good ECSA: {mean_good_ECSA:.2f}')
@@ -94,22 +102,30 @@ plt.legend()
 plt.savefig(f"{DIR_Data}/distribution_Predicted_MASAECSA_ECSA.png")
 plt.show()
 
-# -------- Compute element-wise mean of augmented data --------
 def calculate_elementwise_mean(data_dict):
+    """Calculate element-wise mean of spectroscopic features across samples.
+
+    Args:
+        data_dict: Dictionary mapping sample IDs to feature arrays
+
+    Returns:
+        numpy.ndarray: Mean feature values across all samples
+    """
     data_arrays = [np.array(v) for v in data_dict.values()]
     stacked = np.stack(data_arrays)
     return np.mean(stacked, axis=0)
 
+# Calculate mean spectroscopic signatures for each performance category
 good_samples_mean = calculate_elementwise_mean(good_samples_dict)
 bad_samples_mean = calculate_elementwise_mean(bad_samples_dict)
 
-# Save individual means
+# Export mean spectroscopic signatures
 df_good = pd.DataFrame({'Good Samples Mean': good_samples_mean})
 df_bad = pd.DataFrame({'Bad Samples Mean': bad_samples_mean})
 df_good.to_excel(f'{DIR_Data}/good_samples_mean_II_ECSA_MA_SA.xlsx', index=False)
 df_bad.to_excel(f'{DIR_Data}/bad_samples_mean_II_ECSA_MA_SA.xlsx', index=False)
 
-# -------- Plot Mean Augmented Data --------
+# Generate comparative plot of mean spectroscopic signatures
 plt.figure(figsize=(25, 6))
 plt.plot(good_samples_mean, label='Good')
 plt.plot(bad_samples_mean, label='Bad')
@@ -118,9 +134,9 @@ plt.legend()
 plt.savefig(f"{DIR_Data}/Mean_Sample_MASAECSA.png")
 plt.show()
 
-# Save combined Excel
+# Export combined spectroscopic signatures for comparison
 output_df = pd.DataFrame({
     'Good Data': good_samples_mean,
     'Bad Data': bad_samples_mean
 })
-output_df.to_excel(f'{DIR_Data}/good_bad_samples_mean_data_MASAECSA.xlsx', index=False)
+output_df.to_excel(f'good_bad_samples_mean_data_MASAECSA.xlsx', index=False)

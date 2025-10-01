@@ -1,48 +1,62 @@
+"""Electrochemical Surface Area (ECSA) Analysis and Visualization Script.
+
+This script analyzes predicted ECSA values from multi-modal spectroscopic data,
+categorizes samples by performance, and generates statistical visualizations
+and mean spectroscopic signatures.
+"""
+
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 import numpy as np
 
+# Spectroscopic measurement sequence
 customsequence = ('EXAFS_K2', 'XRD_2_P', 'XANES', 'PDF', 'HAXPES_VB', 'SAXS', 'HAXPES_Pt3d', 'HAXPES_Pt4f')
-DIR_Data = "models_test"
-filename = f"{DIR_Data}/Aug_Predicted_Octa_ECSA.xlsx"
+DIR_Data = ""
+filename = r""  # Path to Excel file with ECSA prediction results [converted from .txt]
 
+# Load ECSA prediction results
 df = pd.read_excel(filename, engine='openpyxl')
 
+# Filter for valid ECSA predictions only
 df = df[df['Predicted score'] > 0]
 
-# Extract the predicted scores
+# Extract Electrochemical Surface Area predictions
 predicted_ECSA = df['Predicted score']
 
-# Define a list of augmented data column names (adjust these names as needed)
+# Extract spectroscopic feature columns
 predicted_col_index = df.columns.get_loc('Predicted score')
 augmented_data_columns = df.columns[predicted_col_index + 1:].tolist()
 
-# Create a new column that combines all augmented data into a single list
+# Combine all spectroscopic features into a single list per sample
 df['AugmentedData'] = df[augmented_data_columns].apply(lambda row: row.dropna().tolist(), axis=1)
 
-low = 25
-high = 1750
+# Define ECSA performance thresholds
+low = 20  # Lower threshold for ECSA (m²/g-Pt)
+high = 190 # Upper threshold for ECSA (m²/g-Pt)
 
-# Categorize the data
-df['Category'] = pd.cut(df['Predicted score'], 
+# Categorize samples based on ECSA performance
+df['Category'] = pd.cut(df['Predicted score'],
                         bins=[-float('inf'), low, high, float('inf')],
                         labels=['Bad Sample', 'Neutral Sample', 'Good Sample'],
                         right=False)
 
-# Separate the data into dictionaries based on category
+# Separate high and low performing ECSA samples
 good_samples_df = df[df['Category'] == 'Good Sample']
 bad_samples_df = df[df['Category'] == 'Bad Sample']
 
+# Create dictionaries mapping ECSA values to spectroscopic features
 good_samples_dict = good_samples_df.set_index('Predicted score')['AugmentedData'].to_dict()
 bad_samples_dict = bad_samples_df.set_index('Predicted score')['AugmentedData'].to_dict()
 
 mean_good_keys = np.mean(list(good_samples_dict.keys()))
 mean_bad_keys = np.mean(list(bad_samples_dict.keys()))
 
+# Report sample distribution statistics
 print("good count", len(good_samples_dict), "low", low, "high", high)
 print("bad count", len(bad_samples_dict), "low", low, "high", high)
-# Plot the distribution for Predicted SA
+
+# Generate ECSA distribution plot with performance thresholds
 plt.figure(figsize=(10, 6))
 sns.histplot(predicted_ECSA, kde=True, label='Predicted ECSA')
 plt.axvline(mean_good_keys, color='r', linestyle='--', label=f'Mean Good Sample Score: {mean_good_keys:.2f}')
