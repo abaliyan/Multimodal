@@ -2,11 +2,9 @@
 
 ---
 
-**Project Name**: Multimodal Catalyst  
-**Performance Prediction**  
+**Project Name**: Multimodal
 **Version**: 1.0.0  
-**Author**: A. Baliyan  
-**License**: MIT
+**Author**: Ankur Baliyan
 
 ---
 
@@ -56,11 +54,14 @@ source multimodal_env/bin/activate  # On Windows: multimodal_env\Scripts\activat
 
 #Install Dependencies:
 
-pip install -r requirements.txt
+pip install -r requirements_MM.txt
 ```
 **Replace the Data in ["MM_dataset_II_III_IV_V_Aug2024"]**:
 
 - Run the scripts according to the need.
+
+**Pre-Trained models are saved in ["MM_models"]**:
+
 
 ## Project Status
 - Completed
