@@ -2,7 +2,7 @@
 
 ---
 
-**Project Name**: Multimodal
+**Project Name**: Multimodal        
 **Version**: 1.0.0  
 **Author**: Ankur Baliyan
 
