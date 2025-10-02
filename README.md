@@ -3,6 +3,7 @@
 ---
 
 **Project Name**: Multimodal
+
 **Version**: 1.0.0  
 **Author**: Ankur Baliyan
 
@@ -60,7 +61,7 @@ pip install -r requirements_MM.txt
 
 - Run the scripts according to the need.
 
-**Pre-Trained models are saved in ["MM_models"]**:
+**Pre-Trained models are saved in ["MM_models_updated"]**:
 
 
 ## Project Status
